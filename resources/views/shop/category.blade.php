@@ -21,7 +21,7 @@
                 <!-- text - end -->
 
                 <div class="flex items-center pb-4">
-                    <h2 class="text-xl font-bold text-gray-900">All Books</h2>
+                    <h2 class="text-xl font-bold text-gray-900">{{ $category->name }} Books</h2>
                     <span class="px-2 py-1 mx-2 rounded-full text-white bg-indigo-500">{{ count($products) }}</span>
                 </div>
 
