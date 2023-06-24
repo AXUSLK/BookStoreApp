@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\AddToCartController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +18,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// home
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// shop
+Route::get('shop', [BookController::class, 'index'])->name('shop');
+
+// cart
+Route::get('cart', [AddToCartController::class, 'cart'])->name('cart');
+Route::get('checkout', [CheckoutController::class, 'show'])->name('checkout');
+
+
+
+
+
+
+// Route::get('/', function () {
+//     return view('home');
+// });
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
+
+require __DIR__ . '/auth.php';
