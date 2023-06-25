@@ -18,7 +18,7 @@ class LovCategorySeeder extends Seeder
         LovCategory::create(
             [
                 'id' => '1',
-                'name' => 'Rate Type',
+                'name' => 'Discount Type',
                 'remarks' => 'Flat Rate, Percentage',
             ]
         );

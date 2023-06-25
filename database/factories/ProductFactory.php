@@ -25,11 +25,12 @@ class ProductFactory extends Factory
 
         return [
             'name' => $name,
+            'description' => $faker->paragraph,
             'slug' => $slug,
             'price' => $faker->numberBetween(500, 3000),
             'thumb_image' => $faker->imageUrl(640, 480, 'Book'),
             'main_image' => $faker->imageUrl(1280, 720, 'Book'),
-            'status' => $faker->boolean(80),
+            'status' => $faker->boolean(85),
             'category_id' => $faker->numberBetween(1, 3),
             'created_by' => 1,
             'updated_by' => 1,

@@ -42,44 +42,88 @@
                     </nav>
 
                     <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-                        @if (Auth::check())
-                            <!-- Cart -->
-                            <div class="mr-4 flow-root text-sm lg:relative lg:ml-8" x-data="Components.popover({ open: false, focus: false })"
-                                x-init="init()" @keydown.escape="onEscape"
-                                @close-popover-group.window="onClosePopoverGroup">
-                                <button type="button" class="group -m-2 p-2 flex items-center" @click="toggle"
-                                    @mousedown="if (open) $event.preventDefault()" aria-expanded="false"
-                                    :aria-expanded="open.toString()">
-                                    <svg class="flex-shrink-0 h-6 w-6 text-gray-700 group-hover:text-gray-900"
-                                        x-description="Heroicon name: outline/shopping-bag"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                    </svg>
-                                    <span
-                                        class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">{{ session('cart') ? count((array) session('cart')) : 0 }}</span>
-                                    <span class="sr-only">items in cart, view bag</span>
-                                </button>
 
-                                <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                                    x-transition:leave="transition ease-in duration-150"
-                                    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                                    class="absolute top-16 inset-x-0 mt-px pb-6 bg-white shadow-lg sm:px-2 lg:top-full lg:left-auto lg:right-0 lg:mt-3 lg:-mr-1.5 lg:w-80 lg:rounded-lg lg:ring-1 lg:ring-black lg:ring-opacity-5"
-                                    x-ref="panel" @click.away="open = false">
-                                    <h2 class="sr-only">Shopping Cart</h2>
+                        <!-- Cart -->
+                        <div class="mr-4 flow-root text-sm lg:relative lg:ml-8" x-data="Components.popover({ open: false, focus: false })"
+                            x-init="init()" @keydown.escape="onEscape"
+                            @close-popover-group.window="onClosePopoverGroup">
+                            <button type="button" class="group -m-2 p-2 flex items-center" @click="toggle"
+                                @mousedown="if (open) $event.preventDefault()" aria-expanded="false"
+                                :aria-expanded="open.toString()">
+                                <svg class="flex-shrink-0 h-6 w-6 text-gray-700 group-hover:text-gray-900"
+                                    x-description="Heroicon name: outline/shopping-bag"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                </svg>
+                                <span
+                                    class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">{{ session('cart') ? count((array) session('cart')) : 0 }}</span>
+                                <span class="sr-only">items in cart, view bag</span>
+                            </button>
 
-
+                            <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                                class="absolute top-16 inset-x-0 mt-px pb-6 bg-white shadow-lg sm:px-2 lg:top-full lg:left-auto lg:right-0 lg:mt-3 lg:-mr-1.5 lg:w-80 lg:rounded-lg lg:ring-1 lg:ring-black lg:ring-opacity-5"
+                                x-ref="panel" @click.away="open = false">
+                                <h2 class="sr-only">Shopping Cart</h2>
 
 
+                                <form class="max-w-2xl mx-auto px-4">
+                                    <div style="max-height: 30rem" class="overflow-y-auto">
+                                        <ul role="list" class="divide-y divide-gray-200">
+                                            @if (session('cart'))
+                                                @foreach (session('cart') as $id => $details)
+                                                    <li class="py-6 flex items-center">
+                                                        <img src="{{ $details['image'] }}"
+                                                            class="flex-none w-16 h-16 rounded-md border border-gray-200">
+                                                        <div class="ml-4 flex-auto">
+                                                            <h3 class="font-medium text-gray-900">
+                                                                <a href="#">{{ $details['name'] }}</a>
+                                                            </h3>
+                                                            <p class="text-gray-500">{{ $details['price'] }} LKR</p>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </div>
 
+                                    @php $totalPrice = 0 @endphp
+                                    @foreach ((array) session('cart') as $id => $details)
+                                        @php $totalPrice =  cart_total(session('cart', []))  @endphp
+                                    @endforeach
+                                    <div class="border-y-2 border-gray-200 py-4 flex items-end justify-end">
+                                        <dt class="text-base font-medium text-gray-900 mr-2">Total : </dt>
+                                        <dd class="text-base font-medium text-gray-900">
+                                            {{ number_format($totalPrice, 2, '.', ',') }} LKR
+                                        </dd>
+                                    </div>
 
+                                    @if (session('cart'))
+                                        <div class="inline-flex text-center w-full">
+                                            <a href="{{ route('checkout') }}" target="_blank"
+                                                class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
+                                                Proceed to Checkout
+                                            </a>
+                                        </div>
+                                    @endif
 
-                                </div>
+                                    <p class="mt-6 text-center">
+                                        <a href="{{ route('cart') }}" target="_blank"
+                                            class="text-sm font-medium text-indigo-600 hover:text-indigo-500">View
+                                            Shopping Cart
+                                        </a>
+                                    </p>
+                                </form>
 
                             </div>
 
+                        </div>
+
+                        @if (Auth::check())
                             <!-- Profile dropdown -->
                             <div x-data="Components.menu({ open: false })" x-init="init()"
                                 @keydown.escape.stop="open = false; focusButton()" @click.away="onClickAway($event)"
@@ -88,9 +132,10 @@
                                     <button type="button"
                                         class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         id="user-menu-button" x-ref="button" @click="onButtonClick()"
-                                        @keyup.space.prevent="onButtonEnter()" @keydown.enter.prevent="onButtonEnter()"
-                                        aria-expanded="false" aria-haspopup="true"
-                                        x-bind:aria-expanded="open.toString()" @keydown.arrow-up.prevent="onArrowUp()"
+                                        @keyup.space.prevent="onButtonEnter()"
+                                        @keydown.enter.prevent="onButtonEnter()" aria-expanded="false"
+                                        aria-haspopup="true" x-bind:aria-expanded="open.toString()"
+                                        @keydown.arrow-up.prevent="onArrowUp()"
                                         @keydown.arrow-down.prevent="onArrowDown()">
                                         <span class="sr-only">Open user menu</span>
                                         <img class="h-8 w-8 rounded-full" alt=""
@@ -136,12 +181,8 @@
                             </div>
                         @else
                             <a href="{{ route('login') }}"
-                                class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-                                Sign in
-                            </a>
-                            <a href="{{ route('register') }}"
                                 class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-                                Sign up
+                                Sign in
                             </a>
                         @endif
                     </div>
@@ -218,22 +259,62 @@
                             </div>
                         </div>
                         <div class="py-3 px-5">
+
+                            <div class="mt-6">
+                                <form class="max-w-2xl mx-auto px-4">
+                                    <div style="max-height: 15rem" class="overflow-y-auto">
+                                        <ul role="list" class="divide-y divide-gray-200">
+                                            @if (session('cart'))
+                                                @foreach (session('cart') as $id => $details)
+                                                    <li class="py-2 flex items-center">
+                                                        <div class="ml-4 flex-auto">
+                                                            <h3 class="font-medium text-gray-900">
+                                                                <a href="#">{{ $details['name'] }}</a>
+                                                            </h3>
+                                                            <p class="text-gray-500">{{ $details['price'] }} LKR</p>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </div>
+
+                                    @php $totalPrice = 0 @endphp
+                                    @foreach ((array) session('cart') as $id => $details)
+                                        @php $totalPrice =  cart_total(session('cart', []))  @endphp
+                                    @endforeach
+                                    <div class="border-y-2 border-gray-200 py-4 flex items-end justify-end">
+                                        <dt class="text-base font-medium text-gray-900 mr-2">Total : </dt>
+                                        <dd class="text-base font-medium text-gray-900">
+                                            {{ number_format($totalPrice, 2, '.', ',') }} LKR
+                                        </dd>
+                                    </div>
+
+                                    @if (session('cart'))
+                                        <div class="inline-flex text-center w-full">
+                                            <a href="{{ route('checkout') }}" target="_blank"
+                                                class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
+                                                Proceed to Checkout
+                                            </a>
+                                        </div>
+                                    @endif
+
+                                    <p class="mt-6 text-center">
+                                        <a href="{{ route('cart') }}" target="_blank"
+                                            class="text-sm font-medium text-indigo-600 hover:text-indigo-500">View
+                                            Shopping Cart
+                                        </a>
+                                    </p>
+                                </form>
+
+                            </div>
+
                             @if (Auth::check())
                                 <div class="grid grid-cols-1 gap-4">
                                     <a href="{{ route('home') }}"
                                         class="text-base bg-indigo-50 text-center p-2 font-medium text-gray-900 hover:text-gray-700">
                                         <i class="icon-stats-bars3 px-4"></i> Home
                                     </a>
-                                </div>
-
-                                <div class="mt-6">
-
-
-
-
-
-
-
                                 </div>
 
                                 <div class="mt-6">
@@ -252,29 +333,7 @@
                                     </p>
                                 </div>
                             @else
-                                <div class="grid grid-cols-2 gap-4">
-                                    <a href="#" class="text-base font-medium text-gray-900 hover:text-gray-700">
-                                        Pricing
-                                    </a>
-
-
-
-
-
-
-
-
-
-
-
-
-                                </div>
-
                                 <div class="mt-6">
-                                    <a href="{{ route('register') }}"
-                                        class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-                                        Sign up
-                                    </a>
                                     <p class="mt-6 text-center text-base font-medium text-gray-500">
                                         Existing customer?
                                         <!-- space -->

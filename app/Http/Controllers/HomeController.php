@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
     {
         $categories = Category::active()->get();
-        $recentProducts = Product::active()->get()->take(12);
+        $recentProducts = Product::active()->orderBy('created_at', 'desc')->take(12)->get();
         return view('home', compact('categories', 'recentProducts'));
     }
 }
