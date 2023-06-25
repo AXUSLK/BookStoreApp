@@ -14,28 +14,32 @@
     @endif
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <link rel="shortcut icon" href="/assets/images/favicon.png">
     <!-- Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- css  -->
+    <!-- start css  -->
     @include('layouts.css')
-    <!-- /.css -->
+    <!-- end css -->
 </head>
 
 <body>
 
-    <!-- start nav-bar -->
+    <!-- start navigation -->
     @include('layouts.navigation')
-    <!-- end nav-bar -->
+    <!-- end navigation -->
 
-    <!-- Main Content Start -->
+    <!-- start content Start -->
     @yield('page-content')
-    <!-- Main Content End -->
+    <!-- end content End -->
 
     <!-- start footer -->
-    @include('layouts.js')
+    @include('layouts.footer')
     <!-- end footer -->
+
+    <!-- start js -->
+    @include('layouts.js')
+    <!-- end js -->
 
 </body>
 
