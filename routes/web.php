@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\AddToCartController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -26,26 +27,17 @@ Route::get('shop', [ProductController::class, 'index'])->name('shop');
 Route::get('shop/{category}', [ProductController::class, 'category'])->name('shop.category');
 
 // cart
-Route::get('cart', [AddToCartController::class, 'cart'])->name('cart');
-Route::get('checkout', [CheckoutController::class, 'show'])->name('checkout');
+Route::get('cart', [CartController::class, 'cart'])->name('cart');
+Route::get('add-to-cart/{id}', [CartController::class, 'addToCart'])->name('add.to.cart');
+Route::patch('update-cart', [CartController::class, 'update'])->name('update.cart');
+Route::delete('remove-from-cart', [CartController::class, 'remove'])->name('remove.from.cart');
+
+Route::middleware('auth')->group(function () {
+    Route::get('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::get('apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon');
+});
 
 
 
-
-
-
-// Route::get('/', function () {
-//     return view('home');
-// });
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
 
 require __DIR__ . '/auth.php';

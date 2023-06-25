@@ -24,9 +24,7 @@
             <span class="text-sm text-gray-500 lg:text-base">
                 {{ $product->category?->name }}
             </span>
-            <button class="text-white text-md font-semibold bg-indigo-500 py-2 px-4 rounded-lg ">
-                Add to cart
-            </button>
+            <x-add-to-cart-button :cart="session('cart')" :productId="$product->id" />
         </div>
     </div>
 </div>

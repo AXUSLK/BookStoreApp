@@ -22,7 +22,9 @@
 
                 <div class="flex items-center pb-4">
                     <h2 class="text-xl font-bold text-gray-900">{{ $category->name }} Books</h2>
-                    <span class="px-2 py-1 mx-2 rounded-full text-white bg-indigo-500">{{ count($products) }}</span>
+                    <span class="px-2 py-1 mx-2 rounded-full text-white bg-indigo-500">
+                        {{ $products->total() }}
+                    </span>
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -32,7 +34,26 @@
                     @endforeach
                     <!-- product - end -->
                 </div>
+
+                <div class="my-4">
+                    {{ $products->links('pagination::tailwind') }}
+                </div>
             </div>
         </div>
     </section>
+@endsection
+
+@section('custom-js')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".add-to-cart").click(function(e) {
+                e.preventDefault();
+                var ele = $(this);
+                var productId = ele.attr('data-id');
+                var url = "{{ route('add.to.cart', ['id' => ':productId']) }}";
+                url = url.replace(':productId', productId);
+                addProductToCart(ele, url, productId);
+            });
+        });
+    </script>
 @endsection

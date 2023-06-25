@@ -27,7 +27,7 @@
                                             {{ $category->name }}
                                         </h1>
                                         <p>
-                                            {{ count($category->products) }} Books
+                                            {{ $category->products()->active()->count() }} Books
                                         </p>
                                     </div>
                                     <div class="mt-2">
@@ -80,10 +80,7 @@
                                 </div>
                             </div>
                             <div class="mt-6">
-                                <a href="{{ route('cart') }}" id="addToCart"
-                                    class="relative flex bg-indigo-500 border border-transparent rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-100 hover:bg-indigo-700">
-                                    Add to cart
-                                </a>
+                                <x-add-to-cart-button :cart="session('cart')" :productId="$product->id" />
                             </div>
                         </div>
                     @endforeach
@@ -94,4 +91,19 @@
 
     </section>
     <!-- end shop -->
+@endsection
+
+@section('custom-js')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".add-to-cart").click(function(e) {
+                e.preventDefault();
+                var ele = $(this);
+                var productId = ele.attr('data-id');
+                var url = "{{ route('add.to.cart', ['id' => ':productId']) }}";
+                url = url.replace(':productId', productId);
+                addProductToCart(ele, url, productId);
+            });
+        });
+    </script>
 @endsection

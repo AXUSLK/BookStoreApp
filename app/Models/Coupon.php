@@ -5,19 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Coupon extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'description',
-        'price',
-        'thumb_image',
-        'main_image',
-        'slug',
+        'code',
         'status',
-        'category_id',
+        'discount',
+        'discount_type',
         'created_by',
         'updated_by',
     ];
@@ -31,8 +27,8 @@ class Product extends Model
         return $query->where('status', true);
     }
 
-    public function category()
+    public function couponDiscountType()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->hasOne(Lov::class, 'discount_type');
     }
 }
